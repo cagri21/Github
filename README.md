@@ -91,10 +91,17 @@ Packages/
 
 GithubTests/
   SearchAutocomplete/
+    Accessibility/
+    Components/
     UseCase/
+    View/
     ViewModel/
     Language/
-  Support/SearchAutocomplete/
+  Support/
+    Extensions/
+    Helpers/
+    SearchAutocomplete/
+    UI/
 
 GithubUITests/
   SearchAutocomplete/
@@ -261,9 +268,15 @@ This keeps strings out of the view logic and makes the feature easier to localiz
 
 The Swift Testing target is grouped by responsibility:
 
+- `GithubTests/SearchAutocomplete/Accessibility` covers stable accessibility identifiers used by both SwiftUI and UI automation.
+- `GithubTests/SearchAutocomplete/Components` covers state-to-symbol, state-to-color, and status presentation mapping.
 - `GithubTests/SearchAutocomplete/UseCase` covers merging GitHub users and repositories, sorting, per-endpoint limits, partial failure, empty batches, and stable suggestion IDs.
+- `GithubTests/SearchAutocomplete/View` covers reusable container actions and safe default callbacks.
 - `GithubTests/SearchAutocomplete/ViewModel` covers query gating, whitespace trimming, empty/error states, retry, stale responses, clear behavior, and pagination.
 - `GithubTests/SearchAutocomplete/Language` covers repository language normalization used by the UI.
+- `GithubTests/Support/Extensions` covers reusable string, URL, date, attributed string, publisher, application, device, color, font, collection, number, and data helpers.
+- `GithubTests/Support/Helpers` covers common state helpers used across reusable UI patterns.
+- `GithubTests/Support/UI` covers shared SwiftUI support components and view-extension composition.
 - `GithubTests/Support/SearchAutocomplete` keeps fixtures, spies, and stubs out of the behavior specs so the test intent stays readable.
 
 The tests focus on the behavior most likely to regress:
@@ -275,7 +288,8 @@ The tests focus on the behavior most likely to regress:
 - a full page reports that more results may exist,
 - stale responses from older queries do not replace newer results,
 - pagination loads the next page when the last visible item appears,
-- repository language names are normalized for UI display.
+- repository language names are normalized for UI display,
+- shared support components keep building safely as reusable UI pieces.
 
 These tests are intentionally closer to behavior than implementation. For example, the stale-response test does not care exactly how cancellation is implemented; it cares that only the latest query remains visible.
 
@@ -317,13 +331,45 @@ xcodebuild \
 
 The main test folders are:
 
+- `GithubTests/SearchAutocomplete/Accessibility`
+- `GithubTests/SearchAutocomplete/Components`
 - `GithubTests/SearchAutocomplete/UseCase`
+- `GithubTests/SearchAutocomplete/View`
 - `GithubTests/SearchAutocomplete/ViewModel`
 - `GithubTests/SearchAutocomplete/Language`
+- `GithubTests/Support/Extensions`
+- `GithubTests/Support/Helpers`
 - `GithubTests/Support/SearchAutocomplete`
+- `GithubTests/Support/UI`
 - `GithubUITests/SearchAutocomplete`
 - `GithubUITests/Launch`
 - `GithubUITests/Support`
+
+The latest verified coverage run used:
+
+```sh
+xcodebuild \
+  -project Github.xcodeproj \
+  -scheme GitDev \
+  -destination 'platform=iOS Simulator,id=113B9A5E-8D38-4BC7-89C1-9DD169E8B1FE' \
+  -derivedDataPath /tmp/GithubDerivedData \
+  -resultBundlePath /tmp/GithubCoverage7.xcresult \
+  -enableCodeCoverage YES \
+  test
+```
+
+Latest verified coverage from that result bundle:
+
+| Target / Area | Coverage |
+| --- | ---: |
+| `Github.app` | 84.59% |
+| `Github/Support` | 79.96% |
+| `Github/Features/SearchAutocomplete` | 92.20% |
+| `Github/Features/SearchAutocomplete` without previews | 97.33% |
+| `GithubTests.xctest` | 95.60% |
+| `GithubUITests.xctest` | 100.00% |
+
+The same run executed 43 Swift Testing tests and 7 UI tests successfully.
 
 This is one of the most important behavior tests. It proves that rapid input changes do not allow an older, slower response to overwrite the newer query's results:
 
@@ -377,7 +423,7 @@ This is one of the most important behavior tests. It proves that rapid input cha
     viewModel.updateQuery("swift")
     viewModel.updateQuery("swiftui")
 
-    try await Task.sleep(for: .milliseconds(140))
+    try await waitForViewModelTasks()
 
     if case let .loaded(results: items) = viewModel.state {
         #expect(items.map(\.title) == ["SwiftUI"])
@@ -401,7 +447,7 @@ The UI test target also launches the app with a debug-only deterministic search 
 
 - Add snapshot or visual regression coverage for the search states.
 - Add integration tests around live request decoding using recorded GitHub API fixtures.
-- Add accessibility-specific checks for row labels, loading states, and retry actions.
+- Add deeper accessibility checks for spoken row labels and VoiceOver ordering.
 - Add better relevance ranking for mixed repository/user suggestions.
 - Add clearer handling for GitHub rate-limit responses with a specific message.
 - Add offline caching for recent successful searches.
