@@ -9,6 +9,8 @@ import XCTest
 
 final class GithubUITestsLaunchTests: XCTestCase {
 
+    // XCTest exposes this as an overridable class property.
+    // swiftlint:disable:next static_over_final_class
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }
