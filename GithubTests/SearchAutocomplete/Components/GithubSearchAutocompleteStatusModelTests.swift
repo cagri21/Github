@@ -18,12 +18,14 @@ struct GithubSearchAutocompleteStatusModelTests {
     }
 
     @Test func resolvesColorForEveryModel() {
-        [
+        let models = [
             GithubSearchAutocompleteStatusModel.empty,
             .error,
             .hint,
             .loading
-        ].forEach { model in
+        ]
+
+        for model in models {
             _ = model.color
         }
     }
