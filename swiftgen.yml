@@ -1,0 +1,22 @@
+strings:
+  inputs: ./Github/Resources/Localizable/en.lproj
+  outputs:
+    - templateName: structured-swift5
+      output: ./Github/Resources/Localizable/Strings+Generated.swift
+
+xcassets:
+  inputs:
+    - ./Github/Resources/Assets/Assets.xcassets
+    - ./Github/Resources/Assets/Colors.xcassets
+  outputs:
+    - templateName: swift5
+      output: ./Github/Resources/Assets/Assets+Generated.swift
+
+fonts:
+  inputs:
+    - ./Github/Resources/Fonts
+  outputs:
+    - templateName: swift5
+      params:
+        enumName: Fonts
+      output: ./Github/Resources/Fonts/Fonts+Generated.swift
