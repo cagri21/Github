@@ -15,6 +15,7 @@ struct GithubSearchAutocompleteResultsView: View {
                 .font(GitVisualTheme.font(size: GitAppLayout.List.resultsCountFontSize))
                 .foregroundStyle(GitVisualTheme.secondaryText)
                 .padding(.top, GitAppLayout.List.topPadding)
+                .accessibilityIdentifier(GithubSearchAutocompleteAccessibilityID.resultsCount)
 
             ScrollView {
                 LazyVStack(spacing: GitAppLayout.List.listSpacing) {
@@ -28,6 +29,9 @@ struct GithubSearchAutocompleteResultsView: View {
                             onLoadNextPageIfNeeded(item)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier(
+                            GithubSearchAutocompleteAccessibilityID.resultRow(item.id)
+                        )
                     }
 
                     Text(L10n.searchAutocompleteResultsSummary(items.count, items.count))
@@ -57,6 +61,7 @@ struct GithubSearchAutocompleteResultsView: View {
                     }
                 }
             }
+            .accessibilityIdentifier(GithubSearchAutocompleteAccessibilityID.resultsList)
             .scrollDismissesKeyboard(.interactively)
             .scrollIndicators(.hidden)
         }

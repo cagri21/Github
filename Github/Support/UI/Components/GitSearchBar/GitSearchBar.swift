@@ -30,6 +30,7 @@ struct GitSearchBar: View {
                     .submitLabel(.search)
                     .tint(props.style.colors.tintColor)
                     .focused(isFocused)
+                    .accessibilityIdentifier(GithubSearchAutocompleteAccessibilityID.searchField)
 
                     if !props.content.query.isEmpty {
                         Button {
@@ -40,6 +41,7 @@ struct GitSearchBar: View {
                                 .foregroundStyle(props.style.colors.clearIconColor)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier(GithubSearchAutocompleteAccessibilityID.clearButton)
                     }
                 }
                 .padding(.horizontal, props.style.layout.horizontalPadding)

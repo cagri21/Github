@@ -1,6 +1,7 @@
 @testable import Github
 import Testing
 
+@Suite("Search repository language")
 struct GithubSearchRepositoryLanguageTests {
     @Test func normalizesKnownLanguageNames() {
         #expect(GithubSearchRepositoryLanguage(displayName: "Swift") == .swift)

@@ -72,6 +72,7 @@ struct GithubSearchAutocompleteStatusView: View {
                         GitGradientCapsuleButton(
                             title: buttonTitle,
                             style: buttonStyle,
+                            accessibilityIdentifier: GithubSearchAutocompleteAccessibilityID.retryButton,
                             action: action
                         )
                         .padding(.top, GitAppLayout.State.buttonTopPadding)
@@ -86,6 +87,7 @@ struct GithubSearchAutocompleteStatusView: View {
                 )
             }
         }
+        .accessibilityIdentifier(GithubSearchAutocompleteAccessibilityID.state(model))
     }
 }
 

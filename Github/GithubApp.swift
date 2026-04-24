@@ -15,9 +15,26 @@ import Resolver
 
 @main
 struct GithubApp: App {
+    private let searchPolicy: GithubSearchAutocompleteViewModelPolicy
     private let searchUseCase: GithubSearchAutocompleteUseCase
 
     init() {
+#if DEBUG
+        if GithubSearchAutocompleteUITesting.isEnabled {
+            searchPolicy = .init(searchDelay: .zero)
+            searchUseCase = GithubSearchAutocompleteUITestUseCase()
+        } else {
+#if canImport(Resolver)
+            Resolver.registerAllServices()
+            let service = Resolver.resolve(SearchService.self)
+            searchUseCase = GithubSearchAutocompleteUseCaseImpl(service: service)
+#else
+            let service = SearchModule.live(config: AppDataSourceConfig())
+            searchUseCase = GithubSearchAutocompleteUseCaseImpl(service: service)
+#endif
+            searchPolicy = .init()
+        }
+#else
 #if canImport(Resolver)
         Resolver.registerAllServices()
         let service = Resolver.resolve(SearchService.self)
@@ -26,6 +43,8 @@ struct GithubApp: App {
         let service = SearchModule.live(config: AppDataSourceConfig())
         searchUseCase = GithubSearchAutocompleteUseCaseImpl(service: service)
 #endif
+        searchPolicy = .init()
+#endif
         Pulse.NetworkLogger.enableProxy()
     }
 
@@ -33,7 +52,8 @@ struct GithubApp: App {
         WindowGroup {
             ContentView(
                 viewModel: GithubSearchAutocompleteViewModel(
-                    useCase: searchUseCase
+                    useCase: searchUseCase,
+                    policy: searchPolicy
                 )
             )
             .gitShowPulseOnShake()
