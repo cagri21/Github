@@ -3,7 +3,7 @@ import Foundation
 import Testing
 
 @MainActor
-@Suite("Search autocomplete view model")
+@Suite("Search autocomplete view model", .serialized)
 struct GithubSearchAutocompleteViewModelTests {
     @Test func requiresMinimumCharactersBeforeSearching() async throws {
         let minimumQueryLength = GithubSearchAutocompleteConfiguration.Search.minimumQueryLength
@@ -159,7 +159,7 @@ struct GithubSearchAutocompleteViewModelTests {
         viewModel.updateQuery("swift")
         viewModel.updateQuery("swiftui")
 
-        try await Task.sleep(for: .milliseconds(140))
+        try await waitForViewModelTasks()
 
         if case let .loaded(results: items) = viewModel.state {
             #expect(items.map(\.title) == ["SwiftUI"])
@@ -295,7 +295,7 @@ struct GithubSearchAutocompleteViewModelTests {
         )
 
         viewModel.updateQuery("repos")
-        try await Task.sleep(for: .milliseconds(20))
+        try await waitForViewModelTasks()
 
         guard case let .loaded(results: initialItems) = viewModel.state,
               let lastItem = initialItems.last
@@ -308,7 +308,7 @@ struct GithubSearchAutocompleteViewModelTests {
         #expect(viewModel.hasMoreResults == true)
 
         viewModel.loadNextPageIfNeeded(currentItem: lastItem)
-        try await Task.sleep(for: .milliseconds(20))
+        try await waitForViewModelTasks()
 
         if case let .loaded(results: appendedItems) = viewModel.state {
             #expect(appendedItems.count == 51)

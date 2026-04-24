@@ -1,6 +1,7 @@
 enum GithubSearchAutocompleteUITestID {
     static let clearButton = "searchAutocomplete.clearButton"
     static let emptyState = "searchAutocomplete.state.empty"
+    static let errorState = "searchAutocomplete.state.error"
     static let hintState = "searchAutocomplete.state.hint"
     static let loadingState = "searchAutocomplete.state.loading"
     static let resultsCount = "searchAutocomplete.resultsCount"

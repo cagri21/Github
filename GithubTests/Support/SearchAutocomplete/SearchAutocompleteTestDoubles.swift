@@ -139,5 +139,9 @@ struct SearchServiceResultStub: SearchService {
 struct SearchServiceTestError: Error {}
 
 func waitForViewModelTasks() async throws {
-    try await Task.sleep(for: .milliseconds(40))
+    for _ in 0 ..< 10 {
+        await Task.yield()
+    }
+
+    try await Task.sleep(for: .milliseconds(150))
 }

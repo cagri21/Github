@@ -44,6 +44,15 @@ final class GithubSearchAutocompleteFlowUITests: XCTestCase {
         XCTAssertFalse(githubElement(GithubUITestID.resultsCount, in: app).exists)
     }
 
+    func testErrorSearchShowsRetryState() throws {
+        let app = launchGithubSearchApp()
+
+        typeSearchText("error", in: app)
+
+        XCTAssertTrue(githubElement(GithubUITestID.errorState, in: app).waitForExistence(timeout: 2))
+        XCTAssertFalse(githubElement(GithubUITestID.resultsCount, in: app).exists)
+    }
+
     func testClearButtonReturnsToHintState() throws {
         let app = launchGithubSearchApp()
 
