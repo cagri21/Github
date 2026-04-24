@@ -1,0 +1,173 @@
+name: Github
+
+packages:
+  # LOCAL FEATURE MODULES
+  CommonData:
+    path: Packages/CommonData
+
+  GithubAPI:
+    path: Packages/GithubAPI
+
+  Resolver:
+    url: https://github.com/hmlongco/Resolver
+    from: 1.5.1
+
+options:
+  deploymentTarget:
+    iOS: 16.4
+  useBaseInternationalization: false
+  developmentLanguage: en
+  createIntermediateGroups: true
+  postGenCommand: ruby BuildScripts/fix_local_package_refs.rb
+
+configs:
+  GitDev: debug
+  GitQA: release
+  GitProd: release
+
+settings:
+  base:
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    SWIFT_VERSION: 5.9
+  configs:
+    GitDev:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: ["DEBUG", "GITDEV"]
+    GitQA:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: ["QA", "GITQA"]
+    GitProd:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: ["PROD", "GITPROD"]
+
+targets:
+  Github:
+    type: application
+    platform: iOS
+    sources:
+      - path: Github
+    info:
+      path: Github/Info.plist
+      properties:
+        APP_NAME: "$(APP_NAME)"
+        APP_BUNDLE_IDENTIFIER: "$(APP_BUNDLE_IDENTIFIER)"
+        GIT_ENVIRONMENT: "$(GIT_ENVIRONMENT)"
+        GIT_BASE_URL: "$(GIT_BASE_URL)"
+        GIT_API_KEY: "$(GIT_API_KEY)"
+        GIT_ACCEPT_LANGUAGE: "$(GIT_ACCEPT_LANGUAGE)"
+        GIT_CONTENT_TYPE: "$(GIT_CONTENT_TYPE)"
+        CFBundleDisplayName: "$(APP_NAME)"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(BUILD_NUMBER)"
+        ITSAppUsesNonExemptEncryption: false
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations~iphone: [UIInterfaceOrientationPortrait]
+
+    configFiles:
+      GitDev: Github/Core/Configs/GitDev.xcconfig
+      GitQA: Github/Core/Configs/GitQA.xcconfig
+      GitProd: Github/Core/Configs/GitProd.xcconfig
+
+    prebuildScripts:
+      - name: Run SwiftLint
+        script: $SRCROOT/BuildScripts/swiftlint.sh
+        basedOnDependencyAnalysis: false
+      - name: Run SwiftGen
+        script: $SRCROOT/BuildScripts/swiftgen.sh
+        basedOnDependencyAnalysis: false
+
+    dependencies:
+      - package: CommonData
+        product: CommonData
+      - package: GithubAPI
+        product: GithubAPI
+      - package: Resolver
+        product: Resolver
+
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "$(APP_BUNDLE_IDENTIFIER)"
+        TARGETED_DEVICE_FAMILY: 1
+        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+        DEVELOPMENT_ASSET_PATHS: "\"Github/Resources/Preview Content\""
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
+        CURRENT_PROJECT_VERSION: "$(BUILD_NUMBER)"
+      configs:
+        GitDev:
+          PRODUCT_BUNDLE_IDENTIFIER: com.cy.github.dev
+        GitQA:
+          PRODUCT_BUNDLE_IDENTIFIER: com.cy.github.qa
+        GitProd:
+          PRODUCT_BUNDLE_IDENTIFIER: com.cy.github
+
+  GithubTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: GithubTests
+    dependencies:
+      - target: Github
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.cy.github.tests
+
+  GithubUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: GithubUITests
+    dependencies:
+      - target: Github
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.cy.github.uitests
+
+schemes:
+  GitDev:
+    build:
+      targets:
+        Github: all
+        GithubTests: [test]
+        GithubUITests: [test]
+    run:
+      config: GitDev
+    test:
+      config: GitDev
+      targets:
+        - GithubTests
+        - GithubUITests
+    archive:
+      config: GitDev
+
+  GitQA:
+    build:
+      targets:
+        Github: all
+        GithubTests: [test]
+        GithubUITests: [test]
+    run:
+      config: GitQA
+    test:
+      config: GitQA
+      targets:
+        - GithubTests
+        - GithubUITests
+    archive:
+      config: GitQA
+
+  GitProd:
+    build:
+      targets:
+        Github: all
+        GithubTests: [test]
+        GithubUITests: [test]
+    run:
+      config: GitProd
+    test:
+      config: GitProd
+      targets:
+        - GithubTests
+        - GithubUITests
+    archive:
+      config: GitProd

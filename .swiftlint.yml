@@ -1,0 +1,99 @@
+included:
+  - Github
+  - GithubTests
+  - GithubUITests
+  - Packages
+
+excluded:
+  - Carthage
+  - Pods
+  - DerivedData
+  - Github.xcodeproj
+  - Packages/CommonData/.build
+  - Packages/CommonData/.swiftpm
+  - Packages/GithubAPI/.build
+  - Packages/GithubAPI/.swiftpm
+  - "**/*Generated.swift"
+
+disabled_rules:
+  - todo
+  - switch_case_alignment
+  - indentation_width
+  - nesting
+  - trailing_comma
+  - type_body_length
+  - file_length
+  - cyclomatic_complexity
+  - function_body_length
+  - force_cast
+  - force_try
+  - redundant_optional_initialization
+  - blanket_disable_command
+
+opt_in_rules:
+  - array_init
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - colon
+  - convenience_type
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - fatal_error_message
+  - first_where
+  - last_where
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - operator_usage_whitespace
+  - prefer_self_type_over_type_of_self
+  - redundant_nil_coalescing
+  - sorted_imports
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - vertical_whitespace_closing_braces
+  - yoda_condition
+
+line_length:
+  warning: 200
+  ignores_urls: true
+  ignores_comments: true
+  ignores_function_declarations: true
+
+identifier_name:
+  excluded:
+    - i
+    - id
+    - x
+    - y
+    - z
+    - w
+  max_length:
+    warning: 45
+    error: 60
+  allowed_symbols:
+    - _
+
+type_name:
+  excluded:
+    - ID
+    - VM
+  max_length:
+    warning: 60
+    error: 80
+  allowed_symbols:
+    - _
+
+large_tuple:
+  warning: 5
+  error: 6
+
+private_over_fileprivate:
+  validate_extensions: true
+
+trailing_whitespace:
+  ignores_empty_lines: false
+  ignores_comments: true
+
+vertical_whitespace:
+  max_empty_lines: 1

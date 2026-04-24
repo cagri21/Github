@@ -1,0 +1,13 @@
+--swiftversion 5.9
+--indent 4
+--allman false
+--wraparguments before-first
+--wrapelements before-first
+--header ignore
+--self remove
+--importgrouping testable-bottom
+--modifierorder acl,mutators,static,class,required,convenience,dynamic
+--trimwhitespace always
+--stripunusedargs closure-only
+--commas inline
+--decimalgrouping 3

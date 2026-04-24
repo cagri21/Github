@@ -1,0 +1,6 @@
+#include "Shared.xcconfig"
+
+APP_NAME = Git QA
+APP_BUNDLE_IDENTIFIER = com.cy.github.qa
+GIT_ENVIRONMENT = GitQA
+GIT_BASE_URL = https:$(SLASH)$(SLASH)api.github.com

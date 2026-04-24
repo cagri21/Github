@@ -1,0 +1,20 @@
+inLoop.xcworkspace/xcuserdata
+inLoopCommon/inLoopCommon.xcodeproj/xcuserdata
+inLoopConsumer/inLoopConsumer.xcodeproj/project.xcworkspace/xcuserdata
+inLoopConsumer/inLoopConsumer.xcodeproj/xcuserdata
+inLoopCustomer/inLoopCustomer.xcodeproj/xcuserdata
+inLoopSDK/inLoopSDK.xcodeproj/xcuserdata
+build/
+.codemogger
+.dev-support-session.json
+.support-session.json
+.manifest.json
+
+# Generic Xcode / SwiftPM
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+.swiftpm/
+DerivedData/
+
+# Local secrets
+Github/Core/Configs/Secrets.xcconfig
