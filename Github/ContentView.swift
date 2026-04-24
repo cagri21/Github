@@ -1,24 +1,21 @@
-//
-//  ContentView.swift
-//  Github
-//
-//  Created by Yorukoglu, Cagri on 21.04.2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @Environment(\.openURL) private var openURL
 
-#Preview {
-    ContentView()
+    @StateObject private var viewModel: GithubSearchAutocompleteViewModel
+
+    init(
+        viewModel: GithubSearchAutocompleteViewModel
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
+    var body: some View {
+        GithubSearchAutocompleteView(viewModel: viewModel) { item in
+            openURL(item.destinationURL)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+    }
 }
